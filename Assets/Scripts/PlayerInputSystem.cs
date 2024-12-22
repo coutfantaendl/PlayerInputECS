@@ -8,6 +8,7 @@ using UnityEngine.InputSystem;
 public partial class PlayerInputSystem : SystemBase
 {
     private InputAction _moveAction;
+    private InputAction _dashAction;
     private InputSystem_Actions _systemActions;
 
     protected override void OnCreate()
@@ -17,6 +18,7 @@ public partial class PlayerInputSystem : SystemBase
         _systemActions = new InputSystem_Actions();
         _systemActions.Player.Enable();
         _moveAction = _systemActions.Player.Move;
+        _dashAction = _systemActions.Player.Dash;
     }
 
     protected override void OnUpdate()
@@ -25,12 +27,15 @@ public partial class PlayerInputSystem : SystemBase
             return;
 
         float2 moveInput = (float2)_moveAction.ReadValue<Vector2>();
+        bool isDashing = _dashAction.WasPressedThisFrame();
+
 
         Entities
             .WithAll<PlayerInputComponent>()
             .ForEach((ref PlayerInputComponent input) =>
             {
                 input.MoveInput = moveInput;
+                input.IsDashing = isDashing;
             }).ScheduleParallel();
     }
 }
