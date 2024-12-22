@@ -23,7 +23,7 @@ public partial class PlayerInputSystem : SystemBase
 
     protected override void OnUpdate()
     {
-        if (_moveAction == null)
+        if (_moveAction == null && _dashAction == null)
             return;
 
         float2 moveInput = (float2)_moveAction.ReadValue<Vector2>();
